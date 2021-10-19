@@ -15,6 +15,7 @@ body {
   position: relative;
   max-width: 800px;
   min-width: 500px;
+  height: 100vh;
   text-align: center;
   margin: auto;
 }
@@ -26,6 +27,10 @@ h1 {
 h3,
 h4 {
   margin-bottom: 8px;
+}
+
+main {
+  margin-bottom: 16px;
 }
 
 .new-game {
@@ -167,4 +172,12 @@ h4 {
 .restart-button:hover {
   opacity: 0.9;
   border: 1px solid light;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 16px;
+  font-weight: bold;
 }
