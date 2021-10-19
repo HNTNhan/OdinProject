@@ -35,9 +35,39 @@ function startNewGame() {
   computerScore = 0;
 }
 
+startNewGame();
+
 const userChoose = document.querySelectorAll(".buttons button");
 const imgUserChoose = document.querySelector(".img-user-choose");
 const imgComputerChoose = document.querySelector(".img-computer-choose");
+const roundHeader = document.querySelector(".show-result h3");
+const textRoundResult = document.querySelector(".text-round-result");
+const textUserScore = document.querySelector(".user-score");
+const textComputerScore = document.querySelector(".computer-score");
+
+function updateSatus(result) {
+  roundHeader.textContent = "Round " + currRound;
+  if (result === -1) {
+    computerScore += 1;
+    textComputerScore.textContent = computerScore;
+    textRoundResult.textContent = "You Loose!";
+    textRoundResult.style.color = "red";
+  } else if (result === 0) {
+    computerScore += 1;
+    userScore += 1;
+    textComputerScore.textContent = computerScore;
+    textUserScore.textContent = userScore;
+    textRoundResult.textContent = "Tie!";
+    textRoundResult.style.color = "blue";
+  } else if (result === 1) {
+    userScore += 1;
+    textUserScore.textContent = userScore;
+    textRoundResult.textContent = "You Win!";
+    textRoundResult.style.color = "green";
+  }
+
+  currRound += 1;
+}
 
 for (let obj of userChoose) {
   obj.addEventListener("click", function () {
@@ -51,7 +81,7 @@ for (let obj of userChoose) {
     imgUserChoose.style.display = "block";
     imgComputerChoose.style.display = "block";
 
-    currRound += 1;
+    updateSatus(result);
   });
 }
 
