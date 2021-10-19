@@ -15,37 +15,54 @@
             <h1>Rock Paper Scissors <br /> Game</h1>
         </header>
         <main>
+            <div class="new-game">
+                <label for="max-score">Choose max score: </label>
+                <input type="number" name="max-score" id="max-score" value="5" min="1" max="100">
+                <br>
+                <button class="new-game-button">New Game</button>
+            </div>
             <div class="show-result">
-                <h3></h3>
-                <div class="show-img-choose">
-                    <div class="img-user-choose">
-                        <h4>User choose</h4>
-                        <img src="#" alt="user choose">
-                        <p class="score user-score">0</p>
-                    </div>
-                    <div class="img-computer-choose">
-                        <h4>Computer choose</h4>
-                        <img src="#" alt="computer choose">
-                        <p class="score computer-score">0</p>
+                <p class="show-max-score">Max score: 5</p>
+                <div class="show-result-content">
+                    <p class="current-round"></p>
+                    <div class="show-img-choose">
+                        <div class="img-user-choose">
+                            <h4>You</h4>
+                            <img src="#" alt="user choose">
+                            <p class="score user-score">0</p>
+                        </div>
+                        <p class="text-round-result"></p>
+                        <div class="img-computer-choose">
+                            <h4>Computer</h4>
+                            <img src="#" alt="computer choose">
+                            <p class="score computer-score">0</p>
+                        </div>
                     </div>
                 </div>
-                <p class="text-round-result"></p>
             </div>
             <div class="choose">
                 <h3>Choose object you want: </h3>
                 <div class="buttons">
-                    <button class="rock-button">
+                    <button class="rock-button object">
                         <img src="public/images/rock.jpg" alt="rock image">
                     </button>
-                    <button class="paper-button">
+                    <button class="paper-button object">
                         <img src="public/images/paper.jpg" alt="paper image">
                     </button>
-                    <button class="scissors-button">
+                    <button class="scissors-button object">
                         <img src="public/images/scissors.jpg" alt="scissors image">
                     </button>
                 </div>
             </div>
         </main>
+
+        <div class="end-game-modal">
+            <div class="modal-content">
+                <p class="modal-result">You Won!</p>
+                <p>Would you like to try again?</p>
+                <button class="restart-button">Start New Game</button>
+            </div>
+        </div>
     </div>
 
     <script src="public/javascript/app.js"></script>

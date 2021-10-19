@@ -23,34 +23,68 @@ function checkRound(playerChoose, computerChoose) {
   }
 }
 
-let numRound;
 let currRound;
 let userScore;
 let computerScore;
-
-function startNewGame() {
-  numRound = 5;
-  currRound = 1;
-  userScore = 0;
-  computerScore = 0;
-}
-
-startNewGame();
+let maxScore;
 
 const userChoose = document.querySelectorAll(".buttons button");
 const imgUserChoose = document.querySelector(".img-user-choose");
 const imgComputerChoose = document.querySelector(".img-computer-choose");
-const roundHeader = document.querySelector(".show-result h3");
+const showResultContent = document.querySelector(".show-result-content");
+const roundHeader = document.querySelector(".current-round");
 const textRoundResult = document.querySelector(".text-round-result");
 const textUserScore = document.querySelector(".user-score");
 const textComputerScore = document.querySelector(".computer-score");
+const endGameModal = document.querySelector(".end-game-modal");
+const endResult = document.querySelector(".modal-result");
+const restartButton = document.querySelector(".restart-button");
+const newGameButton = document.querySelector(".new-game-button");
+const showMaxScore = document.querySelector(".show-max-score");
+
+restartButton.addEventListener("click", function () {
+  startNewGame();
+});
+
+newGameButton.addEventListener("click", function () {
+  startNewGame();
+});
+
+function startNewGame() {
+  maxScore = parseInt(document.querySelector("#max-score").value);
+  maxScore = maxScore < 1 ? 1 : maxScore;
+  currRound = 1;
+  userScore = 0;
+  computerScore = 0;
+  textUserScore.textContent = 0;
+  textComputerScore.textContent = 0;
+  endGameModal.style.display = "none";
+  showResultContent.style.display = "none";
+  showMaxScore.textContent = "Max Score: " + maxScore;
+}
+
+startNewGame();
+
+function gameOver() {
+  endGameModal.style.display = "flex";
+  if (userScore > computerScore) {
+    endResult.textContent = "You Won!";
+    endResult.style.color = "green";
+  } else if (userScore === computerScore) {
+    endResult.textContent = "Tie!";
+    endResult.style.color = "blue";
+  } else {
+    endResult.textContent = "You Lost!";
+    endResult.style.color = "red";
+  }
+}
 
 function updateSatus(result) {
   roundHeader.textContent = "Round " + currRound;
   if (result === -1) {
     computerScore += 1;
     textComputerScore.textContent = computerScore;
-    textRoundResult.textContent = "You Loose!";
+    textRoundResult.textContent = "You Lost!";
     textRoundResult.style.color = "red";
   } else if (result === 0) {
     computerScore += 1;
@@ -62,11 +96,17 @@ function updateSatus(result) {
   } else if (result === 1) {
     userScore += 1;
     textUserScore.textContent = userScore;
-    textRoundResult.textContent = "You Win!";
+    textRoundResult.textContent = "You Won!";
     textRoundResult.style.color = "green";
+  } else {
+    alert("Something went wrong!");
   }
 
   currRound += 1;
+
+  if (userScore >= maxScore || computerScore >= maxScore) {
+    gameOver();
+  }
 }
 
 for (let obj of userChoose) {
@@ -78,9 +118,7 @@ for (let obj of userChoose) {
     imgUserChoose.children[1].src = "public/images/" + playerChoose + ".jpg";
     imgComputerChoose.children[1].src =
       "public/images/" + computerChoose + ".jpg";
-    imgUserChoose.style.display = "block";
-    imgComputerChoose.style.display = "block";
-
+    showResultContent.style.display = "block";
     updateSatus(result);
   });
 }
