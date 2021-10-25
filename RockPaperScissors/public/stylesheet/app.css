@@ -5,17 +5,16 @@
 }
 
 body {
-  padding: 16px;
-  height: 100vh;
   background-color: #222;
   color: white;
 }
 
 .container {
   position: relative;
+  padding: 16px;
   max-width: 800px;
   min-width: 500px;
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
   margin: auto;
 }
@@ -48,6 +47,14 @@ main {
 .new-game-button {
   font-size: 1rem;
   padding: 4px 8px;
+  background-color: transparent;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 16px;
+}
+
+.new-game-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .show-result {
@@ -175,9 +182,7 @@ main {
 }
 
 footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
-  padding: 16px;
+  padding-top: 16px;
   font-weight: bold;
 }
