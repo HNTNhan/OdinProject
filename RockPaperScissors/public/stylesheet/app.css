@@ -145,6 +145,11 @@ main {
   opacity: 0.6;
 }
 
+.buttons figcaption {
+  color: white;
+  padding-bottom: 4px;
+}
+
 .end-game-modal {
   position: absolute;
   left: 0;
