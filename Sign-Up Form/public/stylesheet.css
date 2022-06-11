@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vmin;
+  /* min-width: 300px; */
+  justify-content: center;
+  margin: auto;
+}
+
+.left-side {
+  position: relative;
+  background: url("./tim-swaan-eOpewngf68w-unsplash.jpg") no-repeat center center;
+  background-size: cover;
+  width: 50%;
+}
+
+.left-side > .bg {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0008;
+}
+
+.left-side > .logo {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-side > .logo > img {
+  width: max(45px, 15%);
+}
+
+.left-side > .logo > p {
+  display: inline-block;
+  font-size: 5rem;
+}
+
+.left-side > q {
+  position: absolute;
+  color: white;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+}
+
+.right-side {
+  width: 50%;
+  background-color: #eee;
+}
+
+.right-side > .text {
+  min-height: 30%;
+  padding: 8% 5% 1rem 5%;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.right-side > .text p {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.form-container {
+  background-color: white;
+}
+
+.form-container p:first-child {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  flex: 1;
+}
+
+.form-container .input-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px 0px gray;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.form-container .input-controls div {
+  width: clamp(200px, 50%, 400px);
+  position: relative;
+}
+
+.form-container input {
+  padding: 4px 8px;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 1rem;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.form-container input:valid {
+  border: 2px solid green;
+}
+
+.form-container input:valid + span::before {
+  content: "✓";
+  color: green;
+  position: absolute;
+  bottom: 13px;
+  right: -20px;
+  font-weight: 700;
+}
+
+.form-container input:invalid {
+  border: 2px solid red;
+}
+
+.form-container input:invalid + span::before {
+  content: "✖";
+  color: red;
+  position: absolute;
+  bottom: 13px;
+  right: -20px;
+  font-weight: 700;
+}
+
+.form-container input:focus {
+  border: 2px solid blue;
+  outline: none;
+}
+
+.form-container .button-controls {
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form-container .button-controls button {
+  background-color: #0d6efd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.5s;
+}
+
+.form-container .button-controls button:hover {
+  background-color: #0b5ed7;
+}
+
+.form-container .button-controls a {
+  font-weight: 700;
+  /* color: #0d6efd; */
+}
+
+@media (max-width: 768px) {
+  .left-side {
+    display: none;
+  }
+  .right-side {
+    width: 100%;
+  }
+}
