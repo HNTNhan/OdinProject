@@ -1,5 +1,5 @@
 import { format, differenceInCalendarDays } from "date-fns";
-import { taskFactoryFunction } from "./data";
+import { taskFactoryFunction, projectFactoryFunction } from "./data";
 import { saveAllTasks, saveAllProjects, saveAllLabels } from "./data-api";
 
 // Global variable
@@ -69,18 +69,6 @@ let oldProjectOfTask = null;
 //// Prevent scroll
 var keys = { 37: 1, 38: 1, 39: 1, 40: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1 };
 
-function disableScrollBar() {
-  const topScroll = window.pageYOffset || document.documentElement.scrollTop;
-  const leftScroll = window.pageXOffset || document.documentElement.scrollLeft;
-  window.onscroll = function () {
-    window.scrollTo(leftScroll, topScroll);
-  };
-}
-
-function enableScrollBar() {
-  window.onscroll = function () {};
-}
-
 function preventDefault(e) {
   e.preventDefault();
 }
@@ -129,6 +117,13 @@ function enableScroll() {
   window.removeEventListener("scroll", preventDefault, false);
 }
 
+// Remove project from task
+function removeProjectFromAllTasks(projectId, tasks) {
+  for (let i = 0; i < tasks.length; i++) {
+    if (+tasks[i].getAll().project === +projectId) tasks[i].setProject(null);
+  }
+}
+
 export {
   resetShowTask,
   resetProjectMenu,
@@ -139,6 +134,8 @@ export {
   saveChangeTask,
   oldProjectOfTask,
   taskFactoryFunction,
+  projectFactoryFunction,
   disableScroll,
   enableScroll,
+  removeProjectFromAllTasks,
 };

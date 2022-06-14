@@ -11,6 +11,7 @@ import {
   getTaskByProjectId,
   getAllLabels,
   saveAllLabels,
+  saveAllProjects,
 } from "./data-api";
 import {
   resetShowTask,
@@ -22,8 +23,10 @@ import {
   saveChangeTask,
   oldProjectOfTask,
   taskFactoryFunction,
+  projectFactoryFunction,
   disableScroll,
   enableScroll,
+  removeProjectFromAllTasks,
 } from "./utilites";
 
 ////
@@ -59,8 +62,12 @@ function onClickTaskLi(task) {
   oldProjectOfTask = dialogTaskTemplate.getAll().project;
 
   document.querySelector("#dialog-editor-task-title").value = dialogTaskTemplate.getAll().title;
+
+  document.querySelector("#dialog-editor-task-description").style.height = 0;
   document.querySelector("#dialog-editor-task-description").value =
     dialogTaskTemplate.getAll().description;
+  document.querySelector("#dialog-editor-task-description").style.height =
+    document.querySelector("#dialog-editor-task-description").scrollHeight + "px";
 
   document.querySelector(".dialog-task-editor .task-due-date input").value =
     dialogTaskTemplate.getAll().dueDate;
@@ -90,35 +97,6 @@ function showTasks(tasks, title, complete = false) {
                       <h4>${task.title}</h4>
                       <p>${task.description}</p>
                       <div class="group-features">
-                        <button class="icon-button small-icon edit-button">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3">
-                            <path d="M12 20h9"></path>
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                          </svg>
-                        </button>
-                        <button class="icon-button small-icon change-date-button">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-event" viewBox="0 0 16 16">
-                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
-                            <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
-                          </svg>
-                        </button>
-                        <button class="icon-button small-icon comment-button">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-text" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
-                          </svg>
-                        </button>
-                        <button class="icon-button small-icon change-priority-button">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag-fill" viewBox="0 0 16 16">
-                            <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
-                          </svg>
-                        </button>
-                        <button class="icon-button small-icon change-project-priority">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-symlink" viewBox="0 0 16 16">
-                            <path d="m11.798 8.271-3.182 1.97c-.27.166-.616-.036-.616-.372V9.1s-2.571-.3-4 2.4c.571-4.8 3.143-4.8 4-4.8v-.769c0-.336.346-.538.616-.371l3.182 1.969c.27.166.27.576 0 .742z" />
-                            <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm.694 2.09A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09l-.636 7a1 1 0 0 1-.996.91H2.826a1 1 0 0 1-.995-.91l-.637-7zM6.172 2a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z" />
-                          </svg>
-                        </button>
                         <button id="delete-task-button-${task.id}" class="icon-button small-icon delete-task-button">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
@@ -126,8 +104,8 @@ function showTasks(tasks, title, complete = false) {
                           </svg>
                         </button>
                       </div>`;
-      const editTaskButton = li.querySelector(".edit-button");
-      const commentButton = li.querySelector(".comment-button");
+      // const editTaskButton = li.querySelector(".edit-button");
+      // const commentButton = li.querySelector(".comment-button");
       const deleteTaskButton = li.querySelector(".delete-task-button");
 
       li.querySelector("input").addEventListener("click", (e) => {
@@ -139,8 +117,6 @@ function showTasks(tasks, title, complete = false) {
       });
 
       addEventTaskStatusChange(li.querySelector(".complete-checkbox-button"), taskObj);
-
-      editTaskButton.addEventListener("click", () => {});
 
       deleteTaskButton.addEventListener("click", (e) => {
         const buttonId = e.currentTarget.id.match(/[0-9]*$/);
@@ -167,7 +143,7 @@ function showTasks(tasks, title, complete = false) {
 }
 
 function showAllTask() {
-  showTasks(getAllTasks(), "All");
+  showTasks(getAllTasks(), "All Task", true);
 }
 
 function showTodayTask() {
@@ -226,6 +202,10 @@ showCompleteTaskButton.addEventListener("click", () => {
 
 const projectContainer = document.querySelector("#menu-project-container");
 const projectList = projectContainer.querySelector("#project-list");
+const showNewProjectDialog = projectContainer.querySelector("#show-new-project-dialog");
+const newProjectDialog = document.querySelector(".new-project-dialog");
+const cancelProjectDialogButton = newProjectDialog.querySelector(".cancel-new-project");
+const addNewProjectButton = newProjectDialog.querySelector(".add-new-project");
 
 function createTaskElementInProjectMenu(index, ul) {
   for (let taskId of allProjects[index].getAll().tasks) {
@@ -251,6 +231,7 @@ function createProjectElementMenu() {
     const ul = document.createElement("ul");
 
     details.classList.add("project");
+
     details.addEventListener("click", (e) => {
       resetShowTask = function () {
         showTasksInProject(allProjects[i].getAll().title, allProjects[i].getAll().id);
@@ -265,13 +246,56 @@ function createProjectElementMenu() {
 
     createTaskElementInProjectMenu(i, ul);
 
-    summary.textContent = allProjects[i].getAll().title;
+    summary.innerHTML = `
+      <span>${allProjects[i].getAll().title}</span>
+      <div class="icon-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </div>`;
+
+    summary.querySelector(".icon-button").addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      removeProjectFromAllTasks(allProjects[i].getAll().id, allTasks);
+      allProjects.splice(i, 1);
+      saveAllProjects(allProjects);
+      saveAllTasks(allTasks);
+      location.reload();
+    });
 
     details.appendChild(ul);
     details.appendChild(summary);
     projectList.appendChild(details);
   }
 }
+
+showNewProjectDialog.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  boxTaskEditor.style.display = "none";
+  addTaskButton.style.display = "block";
+
+  newProjectDialog.style.display = "block";
+  newProjectDialog.style.zIndex = 2;
+  popupOverlay.style.zIndex = 1;
+});
+
+cancelProjectDialogButton.addEventListener("click", (e) => {
+  newProjectDialog.style.display = "none";
+  popupOverlay.style.zIndex = -9999;
+});
+
+addNewProjectButton.addEventListener("click", (e) => {
+  const projectName = newProjectDialog.querySelector("#new-project-name").value;
+  const projectColor = newProjectDialog.querySelector("#new-project-color").value;
+
+  allProjects.push(
+    projectFactoryFunction(allProjects[allProjects.length - 1].getAll().id + 1, projectName),
+  );
+  saveAllProjects(allProjects);
+  location.reload();
+});
 
 ////
 //// POPUP OVERLEY
@@ -292,6 +316,9 @@ popupOverlay.addEventListener("click", () => {
       dialogTaskDueDateButton,
       dialogTaskTemplate,
     );
+  }
+  if (newProjectDialog.style.display === "block") {
+    newProjectDialog.style.display = "none";
   }
   popupOverlay.style.zIndex = -9999;
 });
@@ -342,14 +369,6 @@ const dialogTaskDueDateButton = document.querySelector(".dialog-task-editor .tas
 const dialogTaskLabelButton = document.querySelector(".dialog-task-editor .task-label");
 const dialogTaskPriorityButton = document.querySelector(".dialog-task-editor .task-priority");
 const dialogProjectButton = document.querySelector(".dialog-task-editor .project-contain-task");
-
-// Auto increate textbox height when type enter
-document.querySelectorAll("textarea").forEach((textarea) => {
-  textarea.addEventListener("input", () => {
-    textarea.style.height = "2rem";
-    textarea.style.height = textarea.scrollHeight + "px";
-  });
-});
 
 // When change task status complete/not complete
 function addEventTaskStatusChange(inputElement, task) {
@@ -854,3 +873,13 @@ createProjectElementMenu();
 resetProjectMenu = createProjectElementMenu;
 showAllTask();
 resetShowTask = showAllTask;
+
+// Auto increate textbox height when type enter
+document.querySelectorAll("textarea").forEach((textarea) => {
+  // console.log(textarea.style.height, textarea.scrollHeight);
+  // textarea.style.height = textarea.scrollHeight + "px";
+  textarea.addEventListener("input", () => {
+    textarea.style.height = "2rem";
+    textarea.style.height = textarea.scrollHeight + "px";
+  });
+});

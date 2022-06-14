@@ -15,11 +15,14 @@ input, textarea {
 }
 
 :root {
-  --nav-background-color: #bae6fd;
+  --nav-background-color: #dbeafe;
   --nav-border-color: #0ea5e9;
-  --icon-button-hover-color: #e0f2fe;
+  --icon-button-hover-color: #eff6ff;
   --icon-default-fill-color: #0ea5e9;
   --icon-default-stroke-color: #0ea5e9;
+  --icon-marker-default-color: #374151;
+  --main-header-color: #2563eb;
+  --text-blue-color: #3b82f6;
 }
 
 body {
@@ -29,6 +32,7 @@ body {
 h1 {
   font-size: 1.5rem;
   font-weight: 700;
+  /* color: var(--main-header-color); */
 }
 
 .hidden {
@@ -41,6 +45,10 @@ h1 {
   padding: 0;
 }
 
+.popup-overlay {
+  background-color: #00000010;
+}
+
 .popup-overlay,
 .sub-popup-overlay {
   position: fixed;
@@ -49,7 +57,6 @@ h1 {
   width: 100%;
   height: 100%;
   z-index: -9999;
-  background-color: #0000;
 }
 
 #main-container {
@@ -66,8 +73,9 @@ nav {
   grid-area: nav;
   display: grid;
   grid-template-columns: minmax(200px, 1fr) 3fr;
-  padding: 1rem;
+  padding: 0.625rem;
   background-color: var(--nav-background-color);
+  /* border-bottom: 1px solid var(--icon-default-stroke-color); */
 }
 
 nav > ul {
@@ -86,6 +94,14 @@ nav > ul > .search-bar > svg {
   width: 1.25rem;
   height: 1.25rem;
   fill: var(--icon-default-fill-color);
+}
+
+nav .icon-button > svg {
+  fill: var(--icon-default-fill-color);
+}
+
+nav .icon-button:hover {
+  background-color: var(--icon-button-hover-color);
 }
 
 
@@ -115,9 +131,6 @@ nav > ul > .user-account {
 .icon-button > svg {
   width: 1.25rem;
   height: 1.25rem;
-  fill: var(--icon-default-fill-color);
-  /* stroke-width: 0.5px; */
-  /* stroke: var(--icon-default-stroke-color); */
 }
 
 .icon-button.small-icon {
@@ -135,7 +148,6 @@ nav > ul > .user-account {
 
 .icon-button:hover {
   cursor: pointer;
-  background-color: var(--icon-button-hover-color);
 }
 
 .icon-button.delete-task-button > svg {
@@ -157,10 +169,10 @@ nav > ul > .user-account {
 aside {
   grid-area: aside;
   padding: 0.25rem 0.125rem 1rem 2rem;
-  background-color:  #f9fafb;
+  /* background-color:  #f9fafb; */
   display: flex;
   flex-direction: column;
-  border-right: 1px solid gray;
+  border-right: 1px solid var(--icon-default-stroke-color);
   overflow-y: auto;
 }
 
@@ -177,12 +189,61 @@ details > summary > * {
 }
 
 
-#menu-project-container  *:not(summary):not(li):not(#project-list) {
+#menu-project-container  *:not(summary):not(li):not(li *):not(#project-list):not(summary *) {
   padding-left: 1rem;
 }
 
 #menu-project-container summary, #menu-project-container li {
-  padding: 0.5rem 0
+  padding: 0.5rem 0;
+}
+
+#menu-project-container > summary > .icon-button  {
+  padding: 0;
+  float: right;
+  margin-right: 0.25rem;
+}
+
+#menu-project-container > summary > .icon-button:hover > svg  {
+  fill: var(--icon-default-stroke-color);
+}
+
+#menu-project-container > summary > .icon-button > svg  {
+  fill: black;
+}
+
+#menu-project-container > summary {
+  list-style-type: "⮚";
+}
+
+#menu-project-container[open] > summary {
+  list-style-type: "⮛"
+}
+
+#menu-project-container > summary::marker {
+  font-size: 1.125rem;
+  color: var(--icon-default-fill-color);
+}
+
+#project-list > details > summary {
+  list-style-type: "◉ "
+}
+
+#project-list > details > summary::marker {
+  color: var(--icon-marker-default-color);
+}
+
+#project-list > details > summary > .icon-button {
+  padding: 0;
+  float: right;
+  margin-right: 0.25rem;
+}
+
+#project-list > details > summary > .icon-button:hover > svg  {
+  fill: #dc2626;
+}
+
+#project-list > details > summary > .icon-button > svg  {
+  fill: #fca5a5;
 }
 
 
@@ -193,6 +254,20 @@ aside > *:not(hr), #menu-project-container li {
 
 aside > *:hover:not(hr):not(details), #menu-project-container li:hover, #menu-project-container summary:hover {
   background-color: #e5e7eb;
+}
+
+aside .icon-button:not(#show-vacation-tasks):not(details *) > svg{
+  fill: var(--icon-default-fill-color);
+}
+
+aside .icon-button#show-vacation-tasks > svg {
+  stroke: var(--icon-default-fill-color);
+}
+
+aside .icon-button:hover,
+#menu-project-container summary:hover,
+#project-list li:hover {
+  background-color: var(--icon-button-hover-color);
 }
 
 main {
@@ -216,6 +291,10 @@ main {
   gap: 0.25rem;
 }
 
+.list-tasks-section > header > .features > button:hover {
+  color: var(--text-blue-color);
+}
+
 
 #list-tasks-container > ul > li {
   display: grid;
@@ -223,14 +302,63 @@ main {
   grid-template-columns: auto 1fr auto;
   gap:0 0.25rem;
   margin-bottom: 1rem;
+  transition: all 0.2s;
+}
+
+#list-tasks-container > ul > li:hover {
+  padding: 0.25rem;
+  border: 1px solid var(--icon-default-stroke-color);
+  border-radius: 5px;
+}
+
+#list-tasks-container > ul > li *:hover {
+  cursor: pointer;
 }
 
 #list-tasks-container > ul > li > input {
   grid-area: checkbox;
+  position: relative;
+  appearance: none;
   align-self: start;
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
+}
+
+#list-tasks-container > ul > li > input:hover::after {
+  display: block;
+  color: #d1d5db;
+}
+
+#list-tasks-container > ul > li > input::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  height: 80%;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+#list-tasks-container > ul > li > input:checked::before
+ {
+  border-color: #22c55e;
+}
+
+#list-tasks-container > ul > li > input::after {
+  content: "✔";
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(20%, -5%);
+  font-size: 0.75rem;
+}
+
+#list-tasks-container > ul > li > input:checked::after {
+  display: block;
+  color: #22c55e
 }
 
 #list-tasks-container > ul > li > h4 {
@@ -241,9 +369,11 @@ main {
 #list-tasks-container > ul > li > p {
   grid-area: description;
   font-size: 0.875rem;
-  overflow: clip;
+  overflow: hidden;
   margin-right: 3rem;
-  cursor: default;
+  line-height: 1rem;
+  max-height: 3rem;
+  /* cursor: default; */
 }
 
 #list-tasks-container > ul > li > .group-features {
@@ -273,7 +403,7 @@ footer {
   grid-area: footer;
   text-align: center;
   padding: 0.5rem;
-  background-color: #d1d5db;
+  background-color: var(--nav-background-color);
 }
 
 /* Task editor box */
@@ -291,10 +421,24 @@ footer {
   padding-bottom: 1rem;
 }
 
-.box-task-editor__body .item-actions,
-.dialog-task-editor__body .item-actions {
+.item-actions {
   display: flex;
 }
+
+.item-actions > .task-due-date > svg {
+  fill: var(--icon-default-fill-color);
+}
+
+.item-actions > .project-contain-task > svg {
+  fill: #facc15;
+  height: 1.125rem;
+  width: 1.125rem;
+}
+
+.item-actions > .task-label > svg {
+  fill: #ef4444;
+}
+
 
 .task-priority-list .task-priority svg,
 .project-list .li svg{
@@ -309,28 +453,20 @@ footer {
 }
 
 .task-priority.priority-4 svg {
-  fill: white;
-  color: black;
-  stroke-width: 1px;
-  stroke: black;
+  fill: black;
+
 }
 
 .task-priority.priority-3 svg {
   fill: #eab308;
-  color: #eab308;
-  stroke: #eab308;
 }
 
 .task-priority.priority-2 svg {
   fill: #f97316;
-  color: #f97316;
-  stroke: #f97316;
 }
 
 .task-priority.priority-1 svg {
   fill: #dc2626;
-  color: #dc2626;
-  stroke: #dc2626;
 }
 
 
@@ -357,16 +493,16 @@ footer {
 
 .add-task-button > .icon-button > svg{
   fill: white;
-  stroke: #3b82f6;
+  stroke: black;
 }
 
 .add-task-button:hover > .icon-button > svg{
-  fill: #2563eb;
+  fill: var(--icon-default-fill-color);
   stroke: white;
 }
 
 .add-task-button:hover > .icon-button > span {
-  color: #2563eb;
+  color: var(--text-blue-color);
 }
 
 .task-label-list,
@@ -418,4 +554,81 @@ footer {
   border-radius: 0.5rem;
   max-width: 550px;
   width: 550px;
+}
+
+.new-project-dialog {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  max-width: 300px;
+  width: 300px;
+}
+
+.new-project-dialog__header,
+.new-project-dialog__footer {
+  background-color: #f3f4f6;
+  padding: 0.5rem 1rem;
+}
+
+.new-project-dialog__header {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.new-project-dialog__body {
+  padding: 0.5rem 1rem;
+}
+
+.new-project-dialog__body label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.new-project-dialog__body input {
+  display: block;
+  line-height: 1.25rem;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  padding: 0.125rem 0.5rem
+}
+
+.new-project-dialog__footer {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  text-align: right;
+}
+
+.new-project-dialog__footer > button{
+  padding: 0.25rem 0.5rem;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 0.25rem;
+  font-weight: 700;
+}
+
+.new-project-dialog__footer > button:hover {
+  cursor: pointer;
+}
+
+.new-project-dialog__footer > .cancel-new-project {
+  background-color: white;
+}
+
+.new-project-dialog__footer > .cancel-new-project:hover{
+  background-color: #cbd5e1;
+}
+
+.new-project-dialog__footer > .add-new-project {
+  background-color: var(--icon-default-fill-color);
+  color: white;
+  border: var(--main-header-color);
+  padding: 0.25rem 1rem;
 }
