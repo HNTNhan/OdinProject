@@ -1,4 +1,4 @@
-import { format, compareAsc, differenceInBusinessDays } from "date-fns";
+import { format } from "date-fns";
 
 let tasks, projects, labels;
 
@@ -58,12 +58,12 @@ if (!localStorage.getItem("tasks")) {
     },
   ];
   const seedLabels = ["work", "study", "play", "rest"];
-  const seedUser = [
-    {
-      id: 1,
-      username: "Nhan",
-    },
-  ];
+  // const seedUser = [
+  //   {
+  //     id: 1,
+  //     username: "Nhan",
+  //   },
+  // ];
 
   tasks = seedTasks;
   projects = seedProjects;
