@@ -132,6 +132,22 @@ button {
   border-color: #dae0e5;
 }
 
+.status-new, .status-reading, .status-finish {
+  font-weight: 700;
+}
+
+.status-new {
+  color: blue;
+}
+
+.status-reading {
+  color: #facc15;
+}
+
+.status-finish {
+  color: green;
+}
+
 .add-button-wrapper {
   display: flex;
   justify-content: space-between;

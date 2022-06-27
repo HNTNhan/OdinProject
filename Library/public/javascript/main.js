@@ -83,8 +83,11 @@ async function deleteBook() {
   checkDeleteModal.style.display = "none";
 }
 
-function createElement(type, content) {
+function createDefaultCell(type, content, cellClass = "") {
   const element = document.createElement(`${type}`);
+  if (cellClass !== "") {
+    element.classList.add(cellClass);
+  }
   element.textContent = content;
   return element;
 }
@@ -133,14 +136,14 @@ function createTableRowElement(id, title, author, pages, status, date, type) {
   }
 
   tr.setAttribute("data-id", id.toString());
-  tr.appendChild(createElement(type, id));
-  tr.appendChild(createElement(type, title));
-  tr.appendChild(createElement(type, author));
-  tr.appendChild(createElement(type, pages));
-  tr.appendChild(createElement(type, status));
-  tr.appendChild(createElement(type, dateFormat));
+  tr.appendChild(createDefaultCell(type, id));
+  tr.appendChild(createDefaultCell(type, title));
+  tr.appendChild(createDefaultCell(type, author));
+  tr.appendChild(createDefaultCell(type, pages));
+  tr.appendChild(createDefaultCell(type, status, "status-" + status.toLowerCase()));
+  tr.appendChild(createDefaultCell(type, dateFormat));
   if (type === "td") {
-    tr.appendChild(createEditCell(createElement(type, ""), id));
+    tr.appendChild(createEditCell(createDefaultCell(type, ""), id));
   }
   return tr;
 }
@@ -181,6 +184,7 @@ async function showAllBooks(start = 0, end = -1, myLibrary) {
 function updateBookStatus(status) {
   const bookChoosed = document.querySelector(`tr[data-id="${chooseBookID}"]`);
   bookChoosed.childNodes[4].textContent = status;
+  bookChoosed.childNodes[4].className = "status-" + status.toLowerCase();
 }
 
 async function filterBook(e, form) {
