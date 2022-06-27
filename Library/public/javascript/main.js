@@ -1,11 +1,13 @@
+import { addBookTitleValidation, addBookAuthorValidation } from "./form-validation.js";
+
 let myLibrary = JSON.parse(localStorage.getItem("myLibrary")) ?? [];
 let chooseBookID = null;
 let isFilter = false;
+let showBookSection = document.querySelector(".book-info");
 
+const modalContainer = document.querySelectorAll(".modal-container");
 const addBookForm = document.querySelector(".add-book-form");
 const filterForm = document.querySelector(".filter-form");
-let showBookSection = document.querySelector(".book-info");
-// const listBook = document.querySelector(".book-info>table");
 const addBookModal = document.querySelector(".add-book-modal");
 const changeStatusModal = document.querySelector(".change-status-modal");
 const checkDeleteModal = document.querySelector(".check-delete-modal");
@@ -17,14 +19,17 @@ const addBookButton = document.querySelector(".add-new-book-button");
 const cancelCheckDelete = document.querySelector(".cancel-delete");
 const confirmCheckDelete = document.querySelector(".confirm-delete");
 const cancelFilter = document.querySelector(".cancel-filter-button");
+const statusButtons = document.querySelectorAll(".status-button");
 
-function Book(title, author, pages, status) {
-  this.id = title.slice(0, 4) + Math.floor(Math.random() * 9999);
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.status = status;
-  this.dateAdded = Date();
+class Book {
+  constructor(title, author, pages, status) {
+    this.id = title.slice(0, 3) + Math.floor(Math.random() * 9999);
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.status = status;
+    this.dateAdded = Date();
+  }
 }
 
 async function AddBookToLibrary(e) {
@@ -40,14 +45,6 @@ async function AddBookToLibrary(e) {
   localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
   if (isFilter) filterBook(null, filterForm);
   else showAllBooks(0, myLibrary.length, myLibrary);
-  // showAddBook(
-  //   myLibrary.length,
-  //   title,
-  //   author,
-  //   pages,
-  //   status,
-  //   myLibrary[myLibrary.length - 1].dateAdded
-  // );
 
   e.target.title.value = "";
   e.target.author.value = "";
@@ -70,11 +67,11 @@ async function changeState(status) {
   changeStatusModal.style.display = "none";
 }
 
-async function deleteBook(e) {
+async function deleteBook() {
   if (!chooseBookID) return;
   myLibrary.splice(
     myLibrary.findIndex((book) => book.id === chooseBookID),
-    1
+    1,
   );
   await loading();
   localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
@@ -86,8 +83,11 @@ async function deleteBook(e) {
   checkDeleteModal.style.display = "none";
 }
 
-function createElement(type, content) {
+function createDefaultCell(type, content, cellClass = "") {
   const element = document.createElement(`${type}`);
+  if (cellClass !== "") {
+    element.classList.add(cellClass);
+  }
   element.textContent = content;
   return element;
 }
@@ -95,16 +95,28 @@ function createElement(type, content) {
 function createEditCell(td, id) {
   const changeStatusButton = document.createElement("button");
   changeStatusButton.classList.add("edit-button");
-  changeStatusButton.textContent = "Change status?";
-  changeStatusButton.addEventListener("click", function (e) {
+  changeStatusButton.classList.add("change-status-button");
+  changeStatusButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+    </svg>
+  `;
+  changeStatusButton.addEventListener("click", function () {
     changeStatusModal.style.display = "flex";
     chooseBookID = id.toString();
   });
 
   const deleteBookButton = document.createElement("button");
   deleteBookButton.classList.add("edit-button");
-  deleteBookButton.textContent = "Delete?";
-  deleteBookButton.addEventListener("click", function (e) {
+  deleteBookButton.classList.add("delete-button");
+  deleteBookButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+    </svg>
+  `;
+  deleteBookButton.addEventListener("click", function () {
     checkDeleteModal.style.display = "flex";
     chooseBookID = id.toString();
   });
@@ -117,15 +129,21 @@ function createEditCell(td, id) {
 
 function createTableRowElement(id, title, author, pages, status, date, type) {
   const tr = document.createElement("tr");
-  tr.setAttribute("data-id", id.toString());
-  tr.appendChild(createElement(type, id));
-  tr.appendChild(createElement(type, title));
-  tr.appendChild(createElement(type, author));
-  tr.appendChild(createElement(type, pages));
-  tr.appendChild(createElement(type, status === "New" ? "" : status));
-  tr.appendChild(createElement(type, date));
+  let dateFormat = date;
   if (type === "td") {
-    tr.appendChild(createEditCell(createElement(type, ""), id));
+    const dateObj = new Date(date);
+    dateFormat = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`;
+  }
+
+  tr.setAttribute("data-id", id.toString());
+  tr.appendChild(createDefaultCell(type, id));
+  tr.appendChild(createDefaultCell(type, title));
+  tr.appendChild(createDefaultCell(type, author));
+  tr.appendChild(createDefaultCell(type, pages));
+  tr.appendChild(createDefaultCell(type, status, "status-" + status.toLowerCase()));
+  tr.appendChild(createDefaultCell(type, dateFormat));
+  if (type === "td") {
+    tr.appendChild(createEditCell(createDefaultCell(type, ""), id));
   }
   return tr;
 }
@@ -137,15 +155,7 @@ async function showAllBooks(start = 0, end = -1, myLibrary) {
     end = end === -1 ? myLibrary.length : end;
     const table = document.createElement("table");
     table.appendChild(
-      createTableRowElement(
-        "ID",
-        "Title",
-        "Author",
-        "Pages",
-        "Status",
-        "Date",
-        "th"
-      )
+      createTableRowElement("ID", "Title", "Author", "Pages", "Status", "Date", "th"),
     );
 
     for (let i = start; i < end; i++) {
@@ -157,8 +167,8 @@ async function showAllBooks(start = 0, end = -1, myLibrary) {
           myLibrary[i].pages,
           myLibrary[i].status,
           new Date(myLibrary[i].dateAdded).toDateString(),
-          "td"
-        )
+          "td",
+        ),
       );
     }
 
@@ -171,30 +181,11 @@ async function showAllBooks(start = 0, end = -1, myLibrary) {
   }
 }
 
-// function showAddBook(id, title, author, pages, status, date) {
-//   console.log(123231);
-//   listBook.appendChild(
-//     createTableRowElement(
-//       id,
-//       title,
-//       author,
-//       pages,
-//       status,
-//       date.toDateString(),
-//       "td"
-//     )
-//   );
-// }
-
 function updateBookStatus(status) {
   const bookChoosed = document.querySelector(`tr[data-id="${chooseBookID}"]`);
-  bookChoosed.childNodes[4].textContent = status === "New" ? "" : status;
+  bookChoosed.childNodes[4].textContent = status;
+  bookChoosed.childNodes[4].className = "status-" + status.toLowerCase();
 }
-
-// function updateBookDelete() {
-//   const bookChoosed = document.querySelector(`tr[data-id="${chooseBookID}"]`);
-//   bookChoosed.parentNode.removeChild(bookChoosed);
-// }
 
 async function filterBook(e, form) {
   if (e) e.preventDefault();
@@ -212,9 +203,11 @@ async function filterBook(e, form) {
     ) {
       return;
     }
+    console.log(new Date(book.dateAdded), new Date(dateFrom));
     if (book.status !== status && status !== "All") return;
-    if (dateFrom !== "" && book.dateAdded < new Date(`"${dateFrom}"`)) return;
-    if (dateTo !== "" && book.dateAdded > new Date(`"${dateTo}"`)) return;
+    if (dateFrom !== "" && new Date(book.dateAdded).getTime() < new Date(dateFrom).getTime())
+      return;
+    if (dateTo !== "" && new Date(book.dateAdded).getTime() > new Date(dateTo).getTime()) return;
     return book;
   });
 
@@ -225,7 +218,7 @@ async function filterBook(e, form) {
 
 function loading() {
   loaderModal.style.display = "flex";
-  const time = Math.random() * 2000 + 500;
+  const time = Math.random() * 500 + 500;
 
   return new Promise((res) => {
     setTimeout(() => {
@@ -234,6 +227,23 @@ function loading() {
     }, time);
   });
 }
+
+addBookTitleValidation(addBookForm.querySelector("#title"));
+addBookAuthorValidation(addBookForm.querySelector("#author"));
+
+modalContainer.forEach((container) => {
+  container.addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.style.display = "none";
+    }
+  });
+});
+
+statusButtons.forEach((statusButton) => {
+  statusButton.addEventListener("click", (e) => {
+    changeState(e.currentTarget.getAttribute("data-value"));
+  });
+});
 
 addBookForm.addEventListener("submit", (e) => AddBookToLibrary(e));
 
@@ -244,11 +254,11 @@ cancelAddFormButton.addEventListener("click", function (e) {
   addBookModal.style.display = "none";
 });
 
-addBookButton.addEventListener("click", function (e) {
+addBookButton.addEventListener("click", function () {
   addBookModal.style.display = "flex";
 });
 
-cancelCheckDelete.addEventListener("click", function (e) {
+cancelCheckDelete.addEventListener("click", function () {
   checkDeleteModal.style.display = "none";
 });
 
