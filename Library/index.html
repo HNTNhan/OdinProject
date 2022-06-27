@@ -70,11 +70,13 @@
                     <h3>Add New Book</h3>
                     <div class="text-input">
                         <label for="title">Title<sup>*</sup></label>
-                        <input type="text" id="title" name="title" required>
+                        <input type="text" id="title" name="title" pattern="[a-zA-Z0-9 -]+"
+                            required>
                     </div>
                     <div class="text-input">
                         <label for="author">Author<sup>*</sup></label>
-                        <input type="text" id="author" name="author" required>
+                        <input type="text" id="author" name="author" pattern="[a-zA-Z0-9 -]+"
+                            required>
                     </div>
                     <div class="text-input">
                         <label for="pages">Total Pages</label>
@@ -126,8 +128,7 @@
         </div>
     </div>
 
-    <script src="public/javascript/main.js"></script>
-    <script src="public/javascript/validation.js"></script>
+    <script type="module" src="public/javascript/main.js"></script>
 </body>
 
 </html>

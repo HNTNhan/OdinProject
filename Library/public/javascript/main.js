@@ -1,3 +1,5 @@
+import { addBookTitleValidation, addBookAuthorValidation } from "./form-validation.js";
+
 let myLibrary = JSON.parse(localStorage.getItem("myLibrary")) ?? [];
 let chooseBookID = null;
 let isFilter = false;
@@ -197,9 +199,11 @@ async function filterBook(e, form) {
     ) {
       return;
     }
+    console.log(new Date(book.dateAdded), new Date(dateFrom));
     if (book.status !== status && status !== "All") return;
-    if (dateFrom !== "" && book.dateAdded < new Date(`"${dateFrom}"`)) return;
-    if (dateTo !== "" && book.dateAdded > new Date(`"${dateTo}"`)) return;
+    if (dateFrom !== "" && new Date(book.dateAdded).getTime() < new Date(dateFrom).getTime())
+      return;
+    if (dateTo !== "" && new Date(book.dateAdded).getTime() > new Date(dateTo).getTime()) return;
     return book;
   });
 
@@ -219,6 +223,9 @@ function loading() {
     }, time);
   });
 }
+
+addBookTitleValidation(addBookForm.querySelector("#title"));
+addBookAuthorValidation(addBookForm.querySelector("#author"));
 
 modalContainer.forEach((container) => {
   container.addEventListener("click", (e) => {
