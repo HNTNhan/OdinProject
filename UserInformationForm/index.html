@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./public/stylesheet/index.css">
+</head>
+
+<body>
+  <main>
+    <div class="form-contianer">
+      <header>
+        <h1>Your Information</h1>
+      </header>
+      <form action="" novalidate>
+        <div>
+          <label for="user-email">Email</label>
+          <input type="email" id="user-email" name="userEmail" required>
+          <span class="error-message">wqdqwdqwdkwqufqw wfqofqniqhfiqwfqhfuiqwfhi</span>
+        </div>
+        <div>
+          <label for="user-country">Country</label>
+          <select id="user-country" name="userCountry" required>
+            <option value="">-- Choose your country--</option>
+          </select>
+          <span class="error-message"></span>
+        </div>
+        <div>
+          <label for="user-zip-code">Zip Code</label>
+          <input type="text" id="user-zip-code" name="userZipCode" required
+            pattern="(^\d{5}$)|(^\d{9}$)|(^\d{5}-\d{4}$)">
+          <span class="error-message"></span>
+        </div>
+        <div>
+          <label for="user-password">Password</label>
+          <input type="password" id="user-password" name="userPassword" required
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$">
+          <span class="error-message"></span>
+        </div>
+        <div>
+          <label for="user-confirmed-password">Confirm Password</label>
+          <input type="password" id="user-confirmed-password" name="userConfirmedPassword" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="buttons-wrapper">
+          <button type="submit">Submit Your Information</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script type="module" src="./public/javascript/index.js"></script>
+</body>
+
+</html>
