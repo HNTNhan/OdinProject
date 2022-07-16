@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working With APIs</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #e6d8e7;
+      background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239800a1' fill-opacity='0.22'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      position: relative;
+      height: 100vh;
+    }
+
+    .search-wrapper {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .image-wrapper {
+      display: flex;
+      height: 80vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+      min-width: 300px;
+    }
+
+    input,
+    button {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      padding: 0.25rem 0.5rem;
+      outline: none;
+      border-radius: 0.25rem;
+      border: 1px solid #cf71cf;
+      color: purple;
+    }
+
+    button {
+      background-color: #cf71cf;
+      font-weight: 700;
+      border: none;
+    }
+
+    button:hover {
+      box-shadow: 2px 2px 2px 0px purple;
+    }
+
+    button:active {
+      box-shadow: inset 0 0 4px purple;
+    }
+
+    input:focus {
+      border: 1px solid purple;
+    }
+
+    img {
+      height: min(80vh, 80vw);
+      max-height: min(80vh, 80vw);
+      width: auto;
+      border-radius: 1rem;
+      object-fit: contain;
+      border: 2px solid purple;
+      visibility: hidden;
+    }
+
+    img.width-scale {
+      width: min(80vh, 80vw);
+      max-width: min(80vh, 80vw);
+      height: auto;
+    }
+
+    .loading {
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      visibility: hidden;
+      color: purple;
+      animation-name: flicker;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes flicker {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="search-wrapper">
+    <!-- <label for="search">Search</label> -->
+    <input type="text" id="search" name="search" value="cats">
+    <button>Search</button>
+  </div>
+
+  <div class="image-wrapper">
+    <img src="" alt="">
+  </div>
+
+  <div class="loading">
+    <span>Please Wait ...</span>
+  </div>
+
+  <script>
+    const API_KEY = 'RdEJSI7xlefzfbAonEr0hPHy35LQgJ5q';
+
+    const img = document.querySelector("img");
+    const input = document.querySelector("input");
+    const button = document.querySelector("button");
+    const loading = document.querySelector(".loading")
+
+    const getGif = (searchString = "cats") => {
+      img.style.visibility = "hidden";
+      fetch(`https://api.giphy.com/v1/gifs/translate?api_key=${API_KEY}&s=${searchString}`, { mode: "cors" })
+        .then((response) => {
+          return response.json()
+        }).then(response => {
+          if (+response.data.images.original.width > +response.data.images.original.height) {
+            img.classList.add("width-scale")
+          } else {
+            img.classList.remove("width-scale")
+          }
+          img.src = response.data.images.original.url;
+          img.onload = () => {
+            img.style.visibility = "visible";
+            loading.style.visibility = "hidden"
+          }
+        }).catch(err => {
+          alert("Can't found gif. Please search other thing!")
+        })
+    }
+
+    getGif()
+
+    input.addEventListener("keypress", (e) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        button.click();
+      }
+    })
+
+    button.addEventListener("click", () => {
+      event.preventDefault();
+      if (input.value.length) {
+        loading.style.visibility = "visible"
+        getGif(input.value)
+      } else {
+        alert("Please type somgthing to search!")
+      }
+    })
+
+  </script>
+</body>
+
+</html>
