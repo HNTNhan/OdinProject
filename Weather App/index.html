@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+
+  <link rel="stylesheet" href="./public/stylesheet/index.css">
+</head>
+
+<body>
+  <main>
+    <div class="search-section">
+      <input type="text" name="search" id="search" placeholder="City's name">
+      <button id="search-button">Search</button>
+    </div>
+    <div class="display-info-section">
+      <header>
+        <div class="image-wraper">
+          <img src="http://openweathermap.org/img/wn/01d@2x.png" alt="Weather's icon">
+          <p class="weather-descripton"></p>
+        </div>
+        <div class="general-info">
+          <div>
+            <h1></h1>
+            <p class="date"></p>
+          </div>
+          <div>
+            <p class="current-temperature">
+              <span></span><sup>o</sup>C
+            </p>
+            <p class="feels-like-temperature">
+              Feels Like <span></span><sup>o</sup>C
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div class="line"></div>
+
+      <div class="weather-info">
+        <div class="left">
+          <div>
+            <span>Temp min: </span>
+            <span><span id="temp-min"></span><span><sup> o</sup>C</span></span>
+          </div>
+          <div>
+            <span>Temp max: </span>
+            <span><span id="temp-max"></span><span><sup> o</sup>C</span></span>
+          </div>
+          <div><span>Sunrise: </span><span id="sunrise"></span></div>
+          <div><span>Sunset: </span><span id="sunset"></span></div>
+          <div><span>Country: </span><span id="country"></span></div>
+        </div>
+        <div class="right">
+          <div><span>Humidity: </span><span id="humidity"></span></div>
+          <div><span>Visibility: </span><span id="visibility"></span></div>
+          <div><span>Wind direction: </span><span id="wind-direction"></span></div>
+          <div><span>Wind speed: </span><span id="wind-speed"></span></div>
+          <div><span>Clouds: </span><span id="clouds"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="error-message">
+      <p>City not found!</p>
+    </div>
+  </main>
+
+  <div class="cover">
+    <div class="loading">Please wait<span></span></div>
+  </div>
+
+  <script src="./public/javascript/index.js"></script>
+</body>
+
+</html>
